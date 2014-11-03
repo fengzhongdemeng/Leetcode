@@ -1,0 +1,96 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <set>
+#include <map>
+#include <stack>
+#include <queue>
+#include <functional>
+#include <algorithm>
+#include <utility>
+#include <cctype>
+using namespace std;
+
+struct ListNode {
+     int val;
+     ListNode *next;
+     ListNode(int x) : val(x), next(NULL) {}
+};
+
+
+ListNode* buildList(){
+	cout<<"Please input the list length:"<<endl;
+	int n;
+	cin>>n;
+	cout<<"Please input the value of the list:"<<endl;
+	ListNode dumy(-1);
+	ListNode *p = &dumy;
+	for(int i=0;i < n; ++i){
+		int val;
+		cin>>val;
+		p->next = new ListNode(val);
+		p = p->next;
+	}	
+	return dumy.next;
+}
+
+void destory(ListNode *head){
+	ListNode *p = head;
+	while( p ){
+		head = p->next;
+		delete p;
+		p = head;
+	}
+}
+
+void printList(ListNode *head)
+{
+	ListNode *p = head;
+	while( p ){
+		cout<<p->val<<"\t";
+		p = p->next;
+	}
+	cout<<endl;
+}
+ListNode *sortList(ListNode *head) {
+	if( head == NULL || head->next == NULL) return head;
+
+	ListNode dumy(-1);
+	dumy.next = head;
+	ListNode *p1 = &dumy;
+	ListNode *p2 = &dumy;
+	while( p2->next && p2->next->next){
+		p1 = p1->next;
+		p2 = p2->next->next;
+	}
+	p2 = p1->next;
+	p1->next = NULL;
+	p1 = sortList(dumy.next);
+	p2 = sortList(p2);
+	ListNode *p = &dumy;
+	while( p1 && p2){
+		if( p1->val < p2->val){
+			p->next = p1;
+			p1 = p1->next;
+		}else{
+			p->next = p2;
+			p2 = p2->next;
+		}
+		p = p->next;
+	}
+	if( p1 ) p->next = p1;
+	if( p2 ) p->next = p2;
+	return dumy.next;
+}
+
+
+int main()
+{
+	while( 1 ){
+		ListNode* head = buildList();
+		ListNode* res = sortList(head);
+		printList(res);
+		destory(res);
+	}
+	return 0;
+}
